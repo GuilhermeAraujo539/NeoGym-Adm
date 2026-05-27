@@ -1,23 +1,24 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ShieldCheck, Eye, EyeOff, Loader } from 'lucide-react'
+import { Eye, EyeOff, Loader, Sun, Moon } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import toast from 'react-hot-toast'
 import DOMPurify from 'dompurify'
 
 export default function LoginPage() {
-  const { login } = useAuth()
-  const navigate   = useNavigate()
+  const { login }           = useAuth()
+  const { theme, toggle }   = useTheme()
+  const navigate            = useNavigate()
 
   const [form, setForm]           = useState({ email: '', senha: '' })
   const [showSenha, setShowSenha] = useState(false)
   const [loading, setLoading]     = useState(false)
   const [erro, setErro]           = useState('')
 
-  // Sanitiza entradas antes de usar (prevenção XSS extra)
   function handleChange(e) {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: DOMPurify.sanitize(value) }))
+    setForm(prev => ({ ...prev, [name]: DOMPurify.sanitize(value) }))
     setErro('')
   }
 
@@ -30,12 +31,10 @@ export default function LoginPage() {
     setLoading(true)
     try {
       await login(form.email.toLowerCase().trim(), form.senha)
-      toast.success('Bem-vindo ao painel NeoGym!')
+      toast.success('Bem-vindo de volta!')
       navigate('/dashboard', { replace: true })
     } catch (err) {
-      const msg = err.response?.data?.mensagem
-        || err.message
-        || 'Erro ao fazer login.'
+      const msg = err.response?.data?.mensagem || err.message || 'Erro ao fazer login.'
       setErro(msg)
     } finally {
       setLoading(false)
@@ -44,14 +43,27 @@ export default function LoginPage() {
 
   return (
     <div className="login-bg">
+
+      <button
+        className="theme-toggle"
+        onClick={toggle}
+        title="Alternar tema"
+        style={{ position: 'fixed', top: 16, right: 16 }}
+      >
+        {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+      </button>
+
       <div className="login-card">
+
         <div className="login-header">
-          <ShieldCheck size={40} color="#3b82f6" />
-          <h1>Painel Administrativo</h1>
-          <p>Acesso exclusivo para administradores NeoGym</p>
+          <img src="src/public/logo.png" alt="NeoGym" className="login-logo" />
+          <div className="login-divider" />
+          <h2>Painel Administrativo</h2>
+          <p>Acesso exclusivo para administradores</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate autoComplete="off">
+
           <div className="field">
             <label htmlFor="email">E-mail</label>
             <input
@@ -84,10 +96,10 @@ export default function LoginPage() {
               <button
                 type="button"
                 className="eye-btn"
-                onClick={() => setShowSenha((v) => !v)}
+                onClick={() => setShowSenha(v => !v)}
                 tabIndex={-1}
               >
-                {showSenha ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showSenha ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
           </div>
@@ -95,9 +107,18 @@ export default function LoginPage() {
           {erro && <p className="form-error">{erro}</p>}
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? <Loader size={18} className="spin" /> : 'Entrar'}
+            {loading
+              ? <><Loader size={15} className="spin" /> Entrando...</>
+              : 'Entrar'
+            }
           </button>
+
         </form>
+
+        <p className="login-footer">
+          NeoGym © {new Date().getFullYear()}
+        </p>
+
       </div>
     </div>
   )

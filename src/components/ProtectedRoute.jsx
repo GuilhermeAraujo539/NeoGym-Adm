@@ -7,6 +7,7 @@ export default function ProtectedRoute() {
   if (loading) {
     return (
       <div className="splash">
+        <img src="src/public/logo.png" alt="NeoGym" />
         <div className="spinner" />
         <p>Verificando sessão...</p>
       </div>

@@ -79,7 +79,7 @@ function DocumentoModal({ credencial, onClose }) {
 
 function AvaliarModal({ credencial, onClose, onConfirm }) {
   const [observacao, setObservacao] = useState('')
-  const [acao, setAcao]             = useState(null) // 'APROVADO' | 'REJEITADO'
+  const [acao, setAcao]             = useState(null) 
   const [loading, setLoading]       = useState(false)
 
   async function confirmar() {
