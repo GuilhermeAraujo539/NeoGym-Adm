@@ -223,7 +223,6 @@ export default function CredenciaisPage() {
         </button>
       </div>
 
-      {/* Filtros */}
       <div className="toolbar">
         <div className="filter-tabs">
           {STATUS_OPTS.map(opt => (
@@ -239,7 +238,6 @@ export default function CredenciaisPage() {
         <span className="total-label">{total} registro{total !== 1 ? 's' : ''}</span>
       </div>
 
-      {/* Tabela */}
       {loading ? (
         <div className="page-loading"><div className="spinner" /></div>
       ) : items.length === 0 ? (
@@ -299,7 +297,6 @@ export default function CredenciaisPage() {
         </div>
       )}
 
-      {/* Paginação */}
       {totalPaginas > 1 && (
         <div className="pagination">
           <button
